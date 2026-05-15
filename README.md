@@ -87,6 +87,16 @@ blockMesh    # structured multi-block mesh, all zones in one pass
 
 The mesh is generated entirely by `blockMesh` using a parameterised `codeStream` that computes vertex positions analytically from the rotor geometry. No external CAD or snappyHexMesh is required.
 
+### Mesh Overview
+
+![Full domain mesh](mesh_full.png)
+
+*Full circular domain (r = 100 mm). Blue lines show the structured block topology radiating from the rotor hub to the far-field freestream boundary.*
+
+![Blade-region close-up](mesh_blades.png)
+
+*Close-up of the four-bladed rotor region (r = 5–20 mm). Each blade passage is discretised with a structured O-mesh block.*
+
 ### Topology and Cell Counts
 
 The mesh consists of three radial regions:
@@ -290,17 +300,27 @@ A_ref  = 2·r_tip × 2·halfDepth = 4×10⁻⁴ m²
 
 ## 11. Results
 
+### Performance summary
+
+![KPI table](kpi_table.png)
+
 ### Force and moment time histories
 
-The torque M_z(t) and thrust F_x(t) oscillate at the **blade passing frequency** f_bp = nBlades × RPM/60 = 4 × 1 = 4 Hz (one pulse per blade passing the reference angle). After startup transients decay (~0.5 s), both signals settle into a periodic steady state synchronised with the rotation.
+![Force and torque time series](forces.png)
 
-### Wake velocity probes
+The torque M_z(t) and thrust F_x(t) oscillate at the **blade passing frequency** f_bp = nBlades × RPM/60 = 4 × 1 = 4 Hz (one pulse per blade passing the reference angle). After startup transients decay (~0.5 s), both signals settle into a periodic steady state synchronised with the rotation. The negative mean torque (Cm = −0.035) confirms the rotor is aerodynamically resisted — the motor must do work to maintain rotation against the fluid drag, as expected at this low TSR.
 
-The three wake probes (1D, 2D, 3D downstream) show the **velocity deficit** behind the rotor. As the rotor passes, each probe records a periodic dip in Ux corresponding to the low-momentum wake shed by each blade. The deficit recovers with downstream distance as turbulent mixing re-energises the wake.
+### Wake velocity deficit
 
-### Vorticity animation
+![Wake velocity probes](wake_velocity.png)
 
-The vorticity field (ωz component) shows **tip vortices** shed from each blade tip as it rotates. These form a helicoidal pattern in the wake, characteristic of low-tip-speed-ratio rotors. The counter-rotating vortices from adjacent blades interact and pair in the near wake.
+The two in-domain wake probes (1D and 2D downstream) show the **velocity deficit** behind the rotor. As the rotor passes, each probe records a periodic dip in Ux corresponding to the low-momentum wake shed by each blade. The deficit recovers with downstream distance as turbulent mixing re-energises the wake.
+
+### Vorticity field (t = 2 s)
+
+![Vorticity snapshot at t = 2 s](vorticity_snapshot.png)
+
+The vorticity field (ωz component) shows **tip vortices** shed from each blade tip as it rotates. These form a helicoidal pattern in the wake, characteristic of low-tip-speed-ratio rotors. The counter-rotating vortices from adjacent blades interact and pair in the near wake. Red = positive (counter-clockwise) vorticity; blue = negative (clockwise).
 
 ---
 
