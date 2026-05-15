@@ -1,0 +1,67 @@
+FoamFile
+{
+    format      ascii;
+    class       dictionary;
+    object      functions;
+}
+
+// Residuals
+#includeFunc residuals(name=residuals, p, U)
+
+// Forces and moments on rotor blades — torque about z-axis, thrust in x
+rotorForces
+{
+    type            forces;
+    libs            ("libforces.so");
+    writeControl    timeStep;
+    writeInterval   1;
+    patches         (rotor);
+    rho             rhoInf;
+    rhoInf          1.225;       // air density [kg/m³]
+    CofR            (0 0 0);     // centre of rotation
+    log             yes;
+}
+
+// Torque coefficient Cm and thrust coefficient Ct
+rotorForceCoeffs
+{
+    type            forceCoeffs;
+    libs            ("libforces.so");
+    writeControl    timeStep;
+    writeInterval   1;
+    patches         (rotor);
+    rho             rhoInf;
+    rhoInf          1.225;
+    CofR            (0 0 0);
+    liftDir         (0 1 0);
+    dragDir         (1 0 0);     // thrust direction = freestream direction
+    pitchAxis       (0 0 1);     // torque about z
+    magUInf         1.0;         // freestream velocity [m/s]
+    lRef            0.04;        // blade diameter (2*rTip) [m]
+    Aref            4e-4;        // 2*rTip * 2*halfDepth [m²]
+}
+
+// Wake velocity probes: 1D, 2D, 3D downstream of rotor
+wakeProbes
+{
+    type            probes;
+    libs            ("libsampling.so");
+    writeControl    timeStep;
+    writeInterval   1;
+    probeLocations
+    (
+        (0.04  0.0  0.0)   // 1D downstream (x = 1 * 2*rTip)
+        (0.08  0.0  0.0)   // 2D downstream
+        (0.12  0.0  0.0)   // 3D downstream
+    );
+    fields (U p);
+}
+
+// Vorticity field for animation
+vorticity
+{
+    type            vorticity;
+    libs            ("libfieldFunctionObjects.so");
+    writeControl    timeStep;
+    writeInterval   5;
+}

@@ -1,0 +1,14 @@
+# OpenFOAM time directories
+[0-9]*/
+[0-9].[0-9]*/
+!0/
+
+processor*/
+VTK/
+postProcessing/
+dynamicCode/
+.venv/
+.claude/
+log.*
+*.log
+.DS_Store
